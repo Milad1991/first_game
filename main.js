@@ -4,14 +4,15 @@ var spacefield;
 var backgroundv;
 var player;
 var cursors;
-var shots;
-var shotTime = 0;
-var shootButton;
+var bullet;
+var bulletTime = 0;
+var fireButton;
 
 var mainState = {
   preload:function(){
     game.load.image('starfield' , "assets/starfield.png");
     game.load.image('player' , "assets/player.png");
+    game.load.image('bullet' , "assets/bullet.png");
   },
 
   create:function(){
@@ -23,6 +24,17 @@ var mainState = {
       game.physics.enable(player, Phaser.Physics.ARCADE);
 
       cursors = game.input.keyboard.createCursorKeys();
+
+      bullets = game.add.group();
+      bullets.enableBody = true;
+      bullets.physicsBodyType = Phaser.Physics.ARCADE;
+      bullets.createMultiple(30, 'bullet');
+      bullets.setAll('anchor.x', 0);
+      bullets.setAll('anchor.y', 1);
+      bullets.setAll('outOfBOundsKill', true);
+      bullets.setAll('checkWorldBounds', true);
+
+      fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
   },
 
@@ -48,8 +60,26 @@ var mainState = {
       player.body.velocity.y = 350;
     }
 
+
+    if(fireButton.isDown)
+    {
+      fireBullet();
+    }
+
   }
 
+}
+
+function fireBullet(){
+  if(game.time.now > bulletTime){
+    bullet = bullets.getFirstExists(false);
+
+    if(bullet){
+      bullet.reset(player.x,player.y);
+      bullet.body.velocity.y = -350;
+      bulletTime = game.time.now + 200;
+    }
+  }
 }
 
 game.state.add('mainState', mainState);

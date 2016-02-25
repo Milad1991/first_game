@@ -4,6 +4,9 @@ var spacefield;
 var backgroundv;
 var player;
 var cursors;
+var shots;
+var shotTime = 0;
+var shootButton;
 
 var mainState = {
   preload:function(){
@@ -15,7 +18,7 @@ var mainState = {
     spacefield = game.add.tileSprite(0, 0, 800, 600, 'starfield');
     backgroundv = 1;
 
-      player = game.add.sprite(game.world.centerX, game.world.centerY , 'player');
+      player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
       player.frame = 0;
       game.physics.enable(player, Phaser.Physics.ARCADE);
 
@@ -24,6 +27,8 @@ var mainState = {
   },
 
   update:function(){
+    player.body.velocity.x = 0;
+    player.body.velocity.y = 0;
     spacefield.tilePosition.y += backgroundv;
 
     if(cursors.left.isDown)
@@ -33,6 +38,14 @@ var mainState = {
     if(cursors.right.isDown)
     {
       player.body.velocity.x = 350;
+    }
+    if(cursors.up.isDown)
+    {
+      player.body.velocity.y = -350;
+    }
+    if(cursors.down.isDown)
+    {
+      player.body.velocity.y = 350;
     }
 
   }
